@@ -11,51 +11,56 @@
             background: #f4f6f9;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        .login-card {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 30px;
-            border-radius: 12px;
-            background: white;
+        .login-container {
+            margin-top: 80px;
+        }
+        .card {
+            border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         .btn-primary {
-            border-radius: 8px;
-            padding: 10px;
-            font-size: 16px;
+            background-color: #002855;
+            border: none;
         }
-        .footer-link {
-            margin-top: 15px;
-            display: block;
+        .btn-primary:hover {
+            background-color: #004080;
+        }
+        footer {
+            margin-top: 60px;
+            padding: 15px;
+            background: #002855;
+            color: #fff;
             text-align: center;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <div class="login-card">
-        <h2 class="text-center mb-4">Login</h2>
-        <form method="post" novalidate>
-            {% csrf_token %}
-
-            <div class="mb-3">
-                {{ form.username.label_tag }}
-                {{ form.username }}
-                {% if form.username.errors %}
-                    <div class="text-danger">{{ form.username.errors }}</div>
-                {% endif %}
+    <div class="container login-container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card p-4">
+                    <h3 class="text-center mb-4">CISC Calendar System</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input type="text" name="username" class="form-control" placeholder="Enter your username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+                    <p class="text-center mt-3">Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
+                </div>
             </div>
-
-            <div class="mb-3">
-                {{ form.password.label_tag }}
-                {{ form.password }}
-                {% if form.password.errors %}
-                    <div class="text-danger">{{ form.password.errors }}</div>
-                {% endif %}
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100">Login</button>
-        </form>
-        <a href="{% url 'signup' %}" class="footer-link">Don’t have an account? Sign Up</a>
+        </div>
     </div>
+
+    <footer>
+        © {{ now|date:"Y" }} CISC Calendar System | All Rights Reserved
+    </footer>
 </body>
 </html>

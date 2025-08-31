@@ -4,8 +4,8 @@ from . import views
 urlpatterns = [
     path("signup/", views.signup_view, name="signup"),
     path("login/", views.login_view, name="login"),
-    path("dashboard/", views.dashboard, name="dashboard"),
     path("logout/", views.logout_view, name="logout"),
+    path("dashboard/", views.dashboard_view, name="dashboard"),
+    path("profile/", views.profile_view, name="profile"),
+    path("calendar/", views.calendar_view, name="calendar"),
 ]
-# This file defines the URL patterns for the accounts app, linking views to specific URLs.
-# The URLs include signup, login, dashboard, and logout functionalities.

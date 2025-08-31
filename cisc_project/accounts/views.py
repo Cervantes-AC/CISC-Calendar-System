@@ -1,18 +1,20 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
-from .forms import CustomUserCreationForm, CustomAuthenticationForm
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from .forms import CustomUserCreationForm, CustomAuthenticationForm
+
 
 def signup_view(request):
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
+            login(request, user)  # Auto login after signup
             return redirect("dashboard")
     else:
         form = CustomUserCreationForm()
     return render(request, "accounts/signup.html", {"form": form})
+
 
 def login_view(request):
     if request.method == "POST":
@@ -25,17 +27,22 @@ def login_view(request):
         form = CustomAuthenticationForm()
     return render(request, "accounts/login.html", {"form": form})
 
-@login_required
-def dashboard(request):
-    if request.user.role == "student":
-        return render(request, "accounts/student_dashboard.html")
-    elif request.user.role == "faculty":
-        return render(request, "accounts/faculty_dashboard.html")
-    elif request.user.role == "admin":
-        return render(request, "accounts/admin_dashboard.html")
-    else:
-        return redirect("login")
 
 def logout_view(request):
     logout(request)
     return redirect("login")
+
+
+@login_required
+def dashboard_view(request):
+    return render(request, "accounts/dashboard.html")
+
+
+@login_required
+def profile_view(request):
+    return render(request, "accounts/profile.html")
+
+
+@login_required
+def calendar_view(request):
+    return render(request, "accounts/calendar.html")
