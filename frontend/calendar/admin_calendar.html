@@ -20,6 +20,7 @@
 <!-- FullCalendar JS -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/locales-all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.10/index.global.min.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -34,22 +35,43 @@ document.addEventListener('DOMContentLoaded', function () {
             right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
         },
         themeSystem: 'bootstrap5',
-        events: "{% url 'calendar:events_json' %}",
         nowIndicator: true,
         editable: false,
         selectable: true,
+        eventSources: [
+            // Django JSON events
+            {
+                url: "{% url 'calendar:events_json' %}",
+                method: 'GET',
+                failure: function() {
+                    alert('Failed to fetch JSON events.');
+                },
+                color: '#198754', // default color for approved events
+                textColor: 'white'
+            },
+            // Google Calendar events
+            {
+                googleCalendarApiKey: 'AIzaSyC0U13wMr6wzs9SyAnGzV78oNNpHzi2y0g',
+                googleCalendarId: 'YOUR_PUBLIC_CALENDAR_ID@group.calendar.google.com',
+                color: '#0d6efd', // blue for Google events
+                textColor: 'white'
+            }
+        ],
         eventDidMount: function(info) {
-            if(info.event.extendedProps.status === 'pending'){
-                info.el.style.backgroundColor = '#ffc107';
-            } else if(info.event.extendedProps.status === 'approved'){
-                info.el.style.backgroundColor = '#198754';
-            } else if(info.event.extendedProps.status === 'rejected'){
-                info.el.style.backgroundColor = '#dc3545';
+            // Only apply status colors for Django events (not Google events)
+            if(info.event.extendedProps.status){
+                if(info.event.extendedProps.status === 'pending'){
+                    info.el.style.backgroundColor = '#ffc107';
+                } else if(info.event.extendedProps.status === 'approved'){
+                    info.el.style.backgroundColor = '#198754';
+                } else if(info.event.extendedProps.status === 'rejected'){
+                    info.el.style.backgroundColor = '#dc3545';
+                }
             }
 
             info.el.setAttribute('title', 
-                'Organized by: ' + info.event.extendedProps.created_by + 
-                '\nStatus: ' + info.event.extendedProps.status
+                (info.event.extendedProps.created_by ? 'Organized by: ' + info.event.extendedProps.created_by + '\n' : '') +
+                (info.event.extendedProps.status ? 'Status: ' + info.event.extendedProps.status : '')
             );
         },
         eventClick: function(info) {
@@ -57,8 +79,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 "Title: " + info.event.title + "\n" +
                 "Date: " + info.event.start.toLocaleString() + "\n" +
                 "Description: " + (info.event.extendedProps.description || 'No description') + "\n" +
-                "Status: " + info.event.extendedProps.status + "\n" +
-                "Organized by: " + info.event.extendedProps.created_by
+                (info.event.extendedProps.status ? "Status: " + info.event.extendedProps.status + "\n" : '') +
+                (info.event.extendedProps.created_by ? "Organized by: " + info.event.extendedProps.created_by : '')
             );
         }
     });

@@ -11,8 +11,9 @@
 
 <!-- FullCalendar CSS -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
-<!-- FullCalendar JS -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
+<!-- FullCalendar JS + Google Calendar plugin -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.8/index.global.min.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -26,20 +27,25 @@ document.addEventListener('DOMContentLoaded', function() {
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
-        events: {
-            url: "{% url 'calendar:events_json' %}", // JSON endpoint
-            method: 'GET',
-            failure: function() {
-                alert('Failed to fetch events.');
+        eventSources: [
+            // Django JSON events
+            {
+                url: "{% url 'calendar:events_json' %}",
+                method: 'GET',
+                failure: function() {
+                    alert('Failed to fetch JSON events.');
+                },
+                color: '#007bff', // app events color
+                textColor: 'white'
+            },
+            // Google Calendar events
+            {
+                googleCalendarApiKey: 'AIzaSyC0U13wMr6wzs9SyAnGzV78oNNpHzi2y0g',
+                googleCalendarId: 'YOUR_PUBLIC_CALENDAR_ID@group.calendar.google.com',
+                color: '#28a745', // green for Google events
+                textColor: 'white'
             }
-        },
-        loading: function(isLoading) {
-            if (isLoading) console.log('Loading events...');
-            else console.log('Events loaded.');
-        },
-        eventColor: '#007bff',
-        eventTextColor: 'white',
-        eventDisplay: 'block',
+        ],
         eventClick: function(info) {
             var desc = info.event.extendedProps.description || 'No description';
             alert(
