@@ -1,0 +1,71 @@
+{% extends "users/base_dashboard.html" %}
+
+{% block title %}Manage Users{% endblock %}
+{% block header %}Manage Users{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 900px; margin: 20px auto; padding: 20px;">
+    <h2 style="text-align: center; margin-bottom: 25px;">All Users</h2>
+
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+            <tr style="background-color: #007bff; color: white;">
+                <th style="padding: 10px;">Username</th>
+                <th style="padding: 10px;">Email</th>
+                <th style="padding: 10px;">Role</th>
+                <th style="padding: 10px;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in users %}
+            <tr style="border-bottom: 1px solid #ccc;">
+                <td style="padding: 10px;">{{ u.username }}</td>
+                <td style="padding: 10px;">{{ u.email }}</td>
+                <td style="padding: 10px;">{{ u.role }}</td>
+                <td style="padding: 10px;">{% if u.is_active %}Active{% else %}Inactive{% endif %}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center; padding: 10px;">No users found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{% url 'users:register' %}" class="btn">Add New User</a>
+    </div>
+</div>
+
+<style>
+.card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+.btn:hover {
+    background-color: #0056b3;
+}
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+table th {
+    background-color: black;
+}
+table tr:hover {
+    background-color: #f9f9f9;
+}
+</style>
+{% endblock %}

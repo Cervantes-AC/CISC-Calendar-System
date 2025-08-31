@@ -1,0 +1,23 @@
+{% extends "users/base_dashboard.html" %}
+
+{% block title %}Org Officer Dashboard{% endblock %}
+{% block header %}Org Officer Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <h3>View Calendar</h3>
+        <a href="/calendar/">Go</a>
+    </div>
+
+    <div class="card">
+        <h3>Manage Organizations</h3>
+        <a href="#">Go</a>
+    </div>
+
+    <div class="card">
+        <h3>Profile</h3>
+        <a href="/profile/">Go</a>
+    </div>
+</div>
+{% endblock %}

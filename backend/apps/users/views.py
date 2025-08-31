@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm
+from .models import User
 
 # ---------------------------
 # Registration
@@ -28,7 +29,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('users:dashboard_view')  # fixed namespace to 'users'
+            return redirect('users:dashboard_view')
         else:
             messages.error(request, "Invalid username or password")
     return render(request, 'users/login.html')
@@ -46,13 +47,15 @@ def logout_view(request):
 @login_required
 def dashboard_view(request):
     """Redirect users to dashboard based on role"""
-    role = getattr(request.user, 'role', '').lower()  # normalize to lowercase
+    role = getattr(request.user, 'role', '').lower()
     if role == 'student':
         return redirect('users:student_dashboard')
     elif role == 'faculty':
         return redirect('users:faculty_dashboard')
     elif role == 'admin':
         return redirect('users:admin_dashboard')
+    elif role == 'officer':
+        return redirect('users:orgofficer_dashboard')
     else:
         messages.error(request, "Role not recognized")
         return redirect('users:login')
@@ -68,3 +71,25 @@ def faculty_dashboard(request):
 @login_required
 def admin_dashboard(request):
     return render(request, 'users/admin_dashboard.html')
+
+@login_required
+def orgofficer_dashboard(request):
+    return render(request, 'users/orgofficer_dashboard.html')
+
+# ---------------------------
+# Profile
+# ---------------------------
+@login_required
+def profile_view(request):
+    return render(request, 'users/profile.html', {'user': request.user})
+
+# ---------------------------
+# Manage Users (Admin only)
+# ---------------------------
+@login_required
+def manage_users(request):
+    if getattr(request.user, 'role', '').lower() != 'admin':
+        messages.error(request, "Access denied")
+        return redirect('users:dashboard_view')
+    users = User.objects.all()
+    return render(request, 'users/manage_users.html', {'users': users})
