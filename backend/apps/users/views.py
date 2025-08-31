@@ -28,7 +28,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('users:dashboard')  # redirect to role-based dashboard
+            return redirect('users:dashboard_view')  # fixed namespace to 'users'
         else:
             messages.error(request, "Invalid username or password")
     return render(request, 'users/login.html')
@@ -46,12 +46,12 @@ def logout_view(request):
 @login_required
 def dashboard_view(request):
     """Redirect users to dashboard based on role"""
-    role = getattr(request.user, 'role', None)
-    if role == 'Student':
+    role = getattr(request.user, 'role', '').lower()  # normalize to lowercase
+    if role == 'student':
         return redirect('users:student_dashboard')
-    elif role == 'Faculty':
+    elif role == 'faculty':
         return redirect('users:faculty_dashboard')
-    elif role == 'Admin':
+    elif role == 'admin':
         return redirect('users:admin_dashboard')
     else:
         messages.error(request, "Role not recognized")
