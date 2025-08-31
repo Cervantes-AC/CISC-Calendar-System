@@ -19,8 +19,7 @@ def add_event(request):
         if form.is_valid():
             event = form.save(commit=False)
             event.created_by = request.user
-            # For immediate visibility in JSON, set approved; otherwise use 'pending'
-            event.status = 'pending'  
+            event.status = 'pending'
             event.save()
             messages.success(request, "Event submitted for approval")
             return redirect('calendar:add_event')
@@ -39,7 +38,6 @@ def manage_calendar(request):
         messages.error(request, "Access denied")
         return redirect('users:dashboard_view')
 
-    # Fixed: order by existing fields
     events = Event.objects.filter(created_by=request.user).order_by('date', 'time')
 
     if request.method == 'POST':
@@ -78,7 +76,7 @@ def update_event_status(request, event_id, status):
     event = get_object_or_404(Event, id=event_id)
     if status.lower() in ['approved', 'rejected']:
         event.status = status.lower()
-        event.is_approved = True if status.lower() == 'approved' else False
+        event.is_approved = status.lower() == 'approved'
         event.save()
         messages.success(request, f"Event {status.lower()}")
     return redirect('calendar:approval')
@@ -87,7 +85,6 @@ def update_event_status(request, event_id, status):
 # ---------------------------
 # Students/Faculty: View Calendar
 # ---------------------------
-@login_required
 def view_events(request):
     events = Event.objects.filter(status='approved').order_by('date', 'time')
     return render(request, 'calendar/view_events.html', {'events': events})
@@ -98,18 +95,16 @@ def view_events(request):
 # ---------------------------
 def events_json(request):
     """
-    Public JSON endpoint for events (e.g., FullCalendar).
-    Returns only approved events for students/faculty/public.
+    Public JSON endpoint for FullCalendar.
+    Returns only approved events.
     """
-    # Return only approved events
     events = Event.objects.filter(status='approved').order_by('date', 'time')
-
     data = []
     for e in events:
         data.append({
             'id': e.id,
             'title': e.title,
-            'start': e.start_datetime.isoformat(),  # combines date + time
+            'start': e.start_datetime.isoformat(),
             'description': e.description,
             'status': e.status,
             'created_by': e.created_by.username
@@ -127,7 +122,7 @@ def calendar_home(request):
         return redirect('calendar:add_event')
     elif role == 'admin':
         return redirect('calendar:admin_calendar')
-    else:  # student/faculty
+    else:
         return redirect('calendar:view_events')
 
 

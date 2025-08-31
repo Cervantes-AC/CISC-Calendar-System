@@ -6,8 +6,6 @@
 {% block content %}
 <div class="card" style="max-width: 900px; margin: 20px auto; padding: 20px;">
     <h2 style="text-align: center; margin-bottom: 25px;">Event Calendar</h2>
-
-    <!-- FullCalendar container with fixed height -->
     <div id="calendar" style="height: 650px;"></div>
 </div>
 
@@ -28,13 +26,16 @@ document.addEventListener('DOMContentLoaded', function() {
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
-        events: "{% url 'calendar:events_json' %}", // JSON endpoint
-        loading: function(isLoading) {
-            if (isLoading) {
-                console.log('Loading events...');
-            } else {
-                console.log('Events loaded.');
+        events: {
+            url: "{% url 'calendar:events_json' %}", // JSON endpoint
+            method: 'GET',
+            failure: function() {
+                alert('Failed to fetch events.');
             }
+        },
+        loading: function(isLoading) {
+            if (isLoading) console.log('Loading events...');
+            else console.log('Events loaded.');
         },
         eventColor: '#007bff',
         eventTextColor: 'white',
