@@ -1,8 +1,19 @@
 from django.urls import path
-from . import views  # make sure views.py is in the same folder
+from . import views
 
-app_name = 'calendar_app'
+app_name = 'calendar'
 
 urlpatterns = [
-    path('', views.home_view, name='home'),
+    path('', views.calendar_home, name='calendar_home'),
+
+    # Org Officer
+    path('add/', views.add_event, name='add_event'),
+    path('manage/', views.manage_calendar, name='manage_calendar'),
+
+    # Admin
+    path('approval/', views.approval, name='approval'),
+    path('update-status/<int:event_id>/<str:status>/', views.update_event_status, name='update_event_status'),
+
+    # Students/Faculty
+    path('view/', views.view_events, name='view_events'),
 ]

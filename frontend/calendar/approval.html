@@ -1,0 +1,51 @@
+{% extends "users/base_dashboard.html" %}
+
+{% block title %}Event Approval{% endblock %}
+{% block header %}Event Approval{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Pending Events</h5>
+        </div>
+        <div class="card-body">
+            {% if events %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Event Name</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Time</th>
+                                <th scope="col">Created By</th>
+                                <th scope="col" class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for event in events %}
+                            <tr>
+                                <td>{{ event.title }}</td>
+                                <td>{{ event.date }}</td>
+                                <td>{{ event.time }}</td>
+                                <td>{{ event.created_by.username }}</td>
+                                <td class="text-center">
+                                    <a href="{% url 'calendar:update_event_status' event.id 'approved' %}" 
+                                       class="btn btn-success btn-sm">Approve</a>
+                                    <a href="{% url 'calendar:update_event_status' event.id 'rejected' %}" 
+                                       class="btn btn-danger btn-sm ms-2">Reject</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info mb-0">
+                    No pending events at the moment.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

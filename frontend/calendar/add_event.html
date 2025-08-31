@@ -1,0 +1,14 @@
+{% extends "users/base_dashboard.html" %}
+{% block title %}Add Event{% endblock %}
+{% block header %}Add Event{% endblock %}
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 20px auto;">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div style="text-align: center; margin-top: 20px;">
+            <button type="submit" class="edit-btn">Submit Event</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

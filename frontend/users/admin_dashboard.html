@@ -4,49 +4,27 @@
 {% block header %}Admin Dashboard{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h3>Manage Users</h3>
-    <a href="{% url 'users:manage_users' %}">Go</a>
-</div>
+<div class="dashboard-container">
 
-<div class="card">
-    <h3>Manage Calendar</h3>
-    <a href="/calendar/">Go</a>
-</div>
+    <div class="card">
+        <h3>Manage Users</h3>
+        <a href="{% url 'users:manage_users' %}">Go</a>
+    </div>
 
-<div class="card">
-    <h3>Reports</h3>
-    <a href="#">Go</a>
-</div>
+        <div class="card">
+        <h3>View Calendar</h3>
+         <a href="/calendar/">Go</a>
+    </div>
 
-<style>
-.card {
-    background: white;
-    border-radius: 10px;
-    padding: 25px;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
-}
-.card h3 {
-    margin-bottom: 15px;
-    color: #333;
-}
-.card a {
-    display: inline-block;
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-}
-.card a:hover {
-    background-color: #0056b3;
-}
-</style>
+    <div class="card">
+        <h3>Event Approval</h3>
+        <a href="{% url 'calendar:approval' %}">Go</a>
+    </div>
+
+    <div class="card">
+        <h3>Reports</h3>
+        <a href="#">Go</a>
+    </div>
+
+</div>
 {% endblock %}

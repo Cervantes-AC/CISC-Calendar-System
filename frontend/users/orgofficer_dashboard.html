@@ -4,20 +4,24 @@
 {% block header %}Org Officer Dashboard{% endblock %}
 
 {% block content %}
+
 <div class="container">
     <div class="card">
         <h3>View Calendar</h3>
-        <a href="/calendar/">Go</a>
+        <a href="{% url 'calendar:view_events' %}">Go</a>
     </div>
 
     <div class="card">
-        <h3>Manage Organizations</h3>
-        <a href="#">Go</a>
+        <h3>Manage Calendar</h3>
+        <a href="{% url 'calendar:add_event' %}">Go</a>
     </div>
+
+
 
     <div class="card">
         <h3>Profile</h3>
-        <a href="/profile/">Go</a>
+        <a href="{% url 'users:profile' %}">Go</a>
     </div>
 </div>
+
 {% endblock %}

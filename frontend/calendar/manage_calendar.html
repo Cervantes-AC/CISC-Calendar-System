@@ -1,0 +1,46 @@
+{% extends "users/base_dashboard.html" %}
+
+{% block title %}Manage Calendar{% endblock %}
+{% block header %}Manage Calendar{% endblock %}
+
+{% block content %}
+
+<div class="card" style="max-width: 900px; margin: 20px auto; padding: 20px;">
+    <h2 style="text-align: center; margin-bottom: 25px;">Your Events</h2>
+
+    <!-- Event List -->
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+            <tr style="background-color: #007bff; color: white;">
+                <th style="padding: 10px;">Title</th>
+                <th style="padding: 10px;">Date</th>
+                <th style="padding: 10px;">Time</th>
+                <th style="padding: 10px;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+            <tr style="border-bottom: 1px solid #ccc;">
+                <td style="padding: 10px;">{{ event.title }}</td>
+                <td style="padding: 10px;">{{ event.date }}</td>
+                <td style="padding: 10px;">{{ event.time }}</td>
+                <td style="padding: 10px;">{{ event.get_status_display }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center; padding: 10px;">No events created yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Add Event Form -->
+    <h3 style="margin-top: 30px;">Add New Event</h3>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px;">Submit</button>
+    </form>
+</div>
+
+{% endblock %}

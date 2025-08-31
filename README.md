@@ -1,5 +1,5 @@
 # CISC-Calendar-System
-cisc_vhub/
+CISC-Calendar-System/
 ├── backend/
 │   ├── cisc_vhub/                  # Django project folder (config)
 │   │   ├── __init__.py
@@ -17,8 +17,7 @@ cisc_vhub/
 │   │   │   ├── views.py
 │   │   │   ├── urls.py
 │   │   │   ├── forms.py
-│   │   │   ├── serializers.py      # if using DRF later
-│   │   │   └── templates/users/    # Optional if using Django templates
+│   │   │   └── serializers.py
 │   │   │
 │   │   └── calendar_app/           # Calendar management
 │   │       ├── __init__.py
@@ -26,15 +25,25 @@ cisc_vhub/
 │   │       ├── apps.py
 │   │       ├── models.py
 │   │       ├── views.py
-│   │       ├── urls.py
-│   │       └── templates/calendar_app/
+│   │       └── urls.py
 │   │
 │   ├── manage.py
 │   └── requirements.txt
 │
-├── frontend/                       # Optional: static HTML templates / SPA
-│   ├── css/
-│   ├── js/
-│   └── index.html
+├── frontend/                       # HTML templates for the apps
+│   ├── users/                      # All HTML for users
+│   │   ├── login.html
+│   │   ├── register.html
+│   │   ├── dashboard.html
+│   │   ├── profile.html
+│   │   ├── manage_users.html
+│   │   └── ...                     # other user templates
+│   │
+│   └── calendar/                   # All HTML for calendar_app
+│       ├── add_event.html
+│       ├── approve_events.html
+│       ├── view_events.html
+│       └── calendar_home.html
 │
 └── README.md
+

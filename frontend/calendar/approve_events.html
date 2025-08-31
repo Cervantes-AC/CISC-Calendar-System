@@ -1,0 +1,31 @@
+{% extends "users/base_dashboard.html" %}
+{% block title %}Approve Events{% endblock %}
+{% block header %}Approve Events{% endblock %}
+{% block content %}
+<div class="card" style="max-width: 800px; margin: 20px auto;">
+    <h2 style="text-align:center; margin-bottom:20px;">Pending Events</h2>
+    <table style="width:100%; border-collapse:collapse;">
+        <thead>
+            <tr style="background-color:#007bff; color:white;">
+                <th>Title</th><th>Date</th><th>Time</th><th>Created By</th><th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+            <tr>
+                <td>{{ event.title }}</td>
+                <td>{{ event.date }}</td>
+                <td>{{ event.time }}</td>
+                <td>{{ event.created_by.username }}</td>
+                <td>
+                    <a href="{% url 'calendar:update_event_status' event.id 'approved' %}">Approve</a> |
+                    <a href="{% url 'calendar:update_event_status' event.id 'rejected' %}">Reject</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" style="text-align:center;">No pending events.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
