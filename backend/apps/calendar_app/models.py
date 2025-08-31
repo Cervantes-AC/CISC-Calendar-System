@@ -1,6 +1,7 @@
 # backend/apps/calendar/models.py
 from django.db import models
 from django.conf import settings
+from datetime import datetime
 
 class Event(models.Model):
     title = models.CharField(max_length=200)
@@ -19,3 +20,8 @@ class Event(models.Model):
 
     def __str__(self):
         return f"{self.title} on {self.date} at {self.time}"
+
+    @property
+    def start_datetime(self):
+        """Combine date and time into a single datetime object for easy use."""
+        return datetime.combine(self.date, self.time)

@@ -13,7 +13,11 @@ urlpatterns = [
     # Admin
     path('approval/', views.approval, name='approval'),
     path('update-status/<int:event_id>/<str:status>/', views.update_event_status, name='update_event_status'),
+    path('admin-calendar/', views.admin_calendar, name='admin_calendar'),
 
     # Students/Faculty
     path('view/', views.view_events, name='view_events'),
+
+    # JSON endpoint
+    path('events-json/', views.events_json, name='events_json'),
 ]

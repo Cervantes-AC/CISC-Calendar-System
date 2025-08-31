@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import JsonResponse
 from .models import Event
 from .forms import EventForm
-
 
 # ---------------------------
 # Org Officer: Add Event
@@ -19,7 +19,8 @@ def add_event(request):
         if form.is_valid():
             event = form.save(commit=False)
             event.created_by = request.user
-            event.status = 'pending'
+            # For immediate visibility in JSON, set approved; otherwise use 'pending'
+            event.status = 'pending'  
             event.save()
             messages.success(request, "Event submitted for approval")
             return redirect('calendar:add_event')
@@ -38,6 +39,7 @@ def manage_calendar(request):
         messages.error(request, "Access denied")
         return redirect('users:dashboard_view')
 
+    # Fixed: order by existing fields
     events = Event.objects.filter(created_by=request.user).order_by('date', 'time')
 
     if request.method == 'POST':
@@ -63,11 +65,6 @@ def manage_calendar(request):
 # ---------------------------
 @login_required
 def approval(request):
-    if request.user.role.lower() != 'admin':
-        messages.error(request, "Access denied")
-        return redirect('users:dashboard_view')
-
-    # Get all pending events
     events = Event.objects.filter(status='pending').order_by('date', 'time')
     return render(request, 'calendar/approval.html', {'events': events})
 
@@ -97,6 +94,30 @@ def view_events(request):
 
 
 # ---------------------------
+# Calendar JSON endpoint
+# ---------------------------
+def events_json(request):
+    """
+    Public JSON endpoint for events (e.g., FullCalendar).
+    Returns only approved events for students/faculty/public.
+    """
+    # Return only approved events
+    events = Event.objects.filter(status='approved').order_by('date', 'time')
+
+    data = []
+    for e in events:
+        data.append({
+            'id': e.id,
+            'title': e.title,
+            'start': e.start_datetime.isoformat(),  # combines date + time
+            'description': e.description,
+            'status': e.status,
+            'created_by': e.created_by.username
+        })
+    return JsonResponse(data, safe=False)
+
+
+# ---------------------------
 # Redirect based on role
 # ---------------------------
 @login_required
@@ -105,6 +126,18 @@ def calendar_home(request):
     if role == 'officer':
         return redirect('calendar:add_event')
     elif role == 'admin':
-        return redirect('calendar:approval')  # ✅ fixed
+        return redirect('calendar:admin_calendar')
     else:  # student/faculty
         return redirect('calendar:view_events')
+
+
+# ---------------------------
+# Admin: View full calendar
+# ---------------------------
+@login_required
+def admin_calendar(request):
+    if request.user.role.lower() != 'admin':
+        messages.error(request, "Access denied")
+        return redirect('users:dashboard_view')
+
+    return render(request, 'calendar/admin_calendar.html')
